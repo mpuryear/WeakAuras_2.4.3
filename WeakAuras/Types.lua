@@ -13,20 +13,11 @@ RAID_CLASS_COLORS = {
   ["DRUID"] = { r = 1.0, g = 0.49, b = 0.04, colorStr = "ffff7d0a" },
   ["SHAMAN"] = { r = 0.0, g = 0.44, b = 0.87, colorStr = "ff0070de" },
   ["WARRIOR"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "ffc79c6e" },
-  ["DEATHKNIGHT"] = { r = 0.77, g = 0.12 , b = 0.23, colorStr = "ffc41f3b" },
 }
 
-CLASS_SORT_ORDER = { "HUNTER", "WARLOCK", "PRIEST", "PALADIN", "MAGE", "ROGUE", "DRUID", "SHAMAN", "WARRIOR", "DEATHKNIGHT" };
+CLASS_SORT_ORDER = { "HUNTER", "WARLOCK", "PRIEST", "PALADIN", "MAGE", "ROGUE", "DRUID", "SHAMAN", "WARRIOR" };
 
 local SPECIALIZATION = "Specialization"
-
-function GetNumSpecializationsForClassID(id)
-	return 2
-end
-
-function GetSpecializationInfoForClassID(classID, i)
-	return NONE
-end
 
 WeakAuras.glow_action_types = {
   show = L["Show"],
@@ -336,8 +327,7 @@ WeakAuras.power_types = {
   [1] = L["Rage"],
   [2] = L["Focus"],
   [3] = L["Energy"],
-  [4] = L["Happiness"],
-  [6] = L["Runic Power"]
+  [4] = L["Happiness"]
 };
 WeakAuras.miss_types = {
   ABSORB = L["Absorb"],
@@ -365,53 +355,6 @@ WeakAuras.orientation_types = {
   VERTICAL = L["Bottom to Top"],
   VERTICAL_INVERSE = L["Top to Bottom"]
 };
-WeakAuras.spec_types = {
-  [1] = TALENT_SPEC_PRIMARY,	--SPECIALIZATION.." 1",
-  [2] = TALENT_SPEC_SECONDARY,	--SPECIALIZATION.." 2",
- -- [3] = SPECIALIZATION.." 3",
- -- [4] = SPECIALIZATION.." 4"
-}
-WeakAuras.spec_types_reduced = {
-  [1] = SPECIALIZATION.." 1",
-  [2] = SPECIALIZATION.." 2",
-  [3] = SPECIALIZATION.." 3"
-}
-WeakAuras.spec_types_specific = {}
-local function update_specs()
-  for classFileName, classID in pairs(WeakAuras.class_ids) do
-    WeakAuras.spec_types_specific[classFileName] = {
-		TALENT_SPEC_PRIMARY,
-		TALENT_SPEC_SECONDARY,
-	}
-    --[[local numSpecs = GetNumSpecializationsForClassID(classID)
-    for i=1, numSpecs do
-      local _, tabName, _, icon = GetSpecializationInfoForClassID(classID, i);
-      if tabName then
-        tinsert(WeakAuras.spec_types_specific[classFileName], "|T"..(icon or "error")..":0|t "..(tabName or "error"));
-      end
-    end]]
-  end
-end
-local spec_frame = CreateFrame("frame");
-spec_frame:RegisterEvent("PLAYER_LOGIN")
-spec_frame:SetScript("OnEvent", update_specs);
-WeakAuras.talent_types = {}
-do  -- @patch 6.0 compatibility quick fix
-  local numTalents, numTiers, numColumns = _G.MAX_NUM_TALENTS or 21, _G.MAX_NUM_TALENT_TIERS or 7, _G.NUM_TALENT_COLUMNS or 3
-  local talentId,tier,column = 1,1,1
-  while talentId <= numTalents do
-    while tier <= numTiers do
-      while column <= numColumns do
-        WeakAuras.talent_types[talentId] = L["Tier "]..tier.." - "..column
-        column = column + 1
-        talentId = talentId + 1
-      end
-      column = 1
-      tier = tier + 1
-    end
-    tier = 1
-  end
-end
 
 WeakAuras.totem_types = {
   [1] = L["Fire"],

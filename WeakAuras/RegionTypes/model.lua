@@ -130,7 +130,7 @@ local function modify(parent, region, data)
 	-- Roate model
     function region:Rotate(degrees)
         region.rotation = degrees;
-        model:SetFacing(rad(region.rotation));
+        model:SetFacing(math.rad(region.rotation));
     end
 	region:Rotate(data.rotation);
     

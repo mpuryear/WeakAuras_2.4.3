@@ -178,7 +178,7 @@ local function modifyThumbnail(parent, region, data, fullModify, size)
 		end
     end);
     model:SetPosition(data.model_z, data.model_x, data.model_y);
-    model:SetFacing(rad(data.rotation));
+    model:SetFacing(math.rad(data.rotation));
 end
 
 local function createIcon()

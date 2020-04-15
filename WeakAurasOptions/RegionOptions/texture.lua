@@ -123,7 +123,7 @@ local function modifyThumbnail(parent, region, data, fullModify, size)
     
     local ulx,uly , llx,lly , urx,ury , lrx,lry;
     if(data.rotate) then
-        local angle = rad(135 - data.rotation);
+        local angle = math.rad(135 - data.rotation);
         local vx = math.cos(angle);
         local vy = math.sin(angle);
         

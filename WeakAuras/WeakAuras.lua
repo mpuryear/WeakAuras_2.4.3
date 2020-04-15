@@ -910,16 +910,6 @@ do
 
                 if not (spellCdExps[id]) then
                     local match = nil
-                    if (select(2, UnitClass("player")) == "DEATHKNIGHT") then
-                        match = false
-                        for runeId = 1, 6 do
-                            local runeStart, runeDuration = GetRuneCooldown(runeId)
-                            if runeDuration == duration and math.abs(runeStart - startTime) < 0.01 then
-                                match = true;
-                                break;
-                            end
-                        end
-                    end
 
                     -- New cooldown
                     spellCdDurs[id] = duration;
@@ -928,16 +918,6 @@ do
                     WeakAuras.ScanEvents("SPELL_COOLDOWN_STARTED", id, match);
                 elseif (spellCdExps[id] ~= endTime) then
                     local match = nil
-                    if (select(2, UnitClass("player")) == "DEATHKNIGHT") then
-                        match = false
-                        for runeId = 1, 6 do
-                            local runeStart, runeDuration = GetRuneCooldown(runeId)
-                            if runeDuration == duration and math.abs(runeStart - startTime) < 0.01 then
-                                match = true;
-                                break;
-                            end
-                        end
-                    end
 
                     -- Cooldown is now different
                     if (spellCdHandles[id]) then
@@ -1705,15 +1685,8 @@ function WeakAuras.CreateTalentCache()
                 name = talentName,
                 icon = talentIcon
             }
-            for class in pairs(WeakAuras.class_types) do
-                if (db.talent_cache[class] and db.talent_cache[class][talentId]) then
-                    --Get the icon and name from the talent cache and record it in the table that will be used by WeakAurasOptions
-                    WeakAuras.talent_types_specific[class][talentId] = "|T" .. (db.talent_cache[class][talentId].icon or "error") .. ":0|t " .. (db.talent_cache[class][talentId].name or "error");
-                else
-                    --If there is no data in the cache, just use the default
-                    WeakAuras.talent_types_specific[class][talentId] = WeakAuras.talent_types[talentId]
-                end
-            end
+
+			WeakAuras.talent_types_specific[player_class][talentId] = "|T" .. (db.talent_cache[player_class][talentId].icon or "error") .. ":0|t " .. (db.talent_cache[player_class][talentId].name or "error");
         end
     end
     --check for empty talent DB
@@ -2217,7 +2190,7 @@ function WeakAuras.ScanForLoads(self, event, arg1)
     if (event == "PLAYER_LEVEL_UP") then
         playerLevel = arg1;
     end
-    local player, zone, role = UnitName("player"), GetRealZoneText();
+    local player, zone = UnitName("player"), GetRealZoneText();
 	local inGroup = IsInGroup();
 	local battleShouting = true
 	
@@ -2232,7 +2205,7 @@ function WeakAuras.ScanForLoads(self, event, arg1)
     local inInstance, Type = IsInInstance()
     local _, size, difficulty, instanceType, difficultyIndex;
     local incombat = UnitAffectingCombat("player") -- or UnitAffectingCombat("pet");
-    local inpetbattle = false --C_PetBattles.IsInBattle()
+
     if (inInstance) then
         _, instanceType, difficultyIndex = GetInstanceInfo();
         size = Type
@@ -2263,24 +2236,6 @@ function WeakAuras.ScanForLoads(self, event, arg1)
         elseif difficultyIndex == 9 then
             size = "fortyman"
             difficulty = "normal"
-        elseif difficultyIndex == 11 then
-            size = "scenario"
-            difficulty = "heroic"
-        elseif difficultyIndex == 12 then
-            size = "scenario"
-            difficulty = "normal"
-        elseif difficultyIndex == 14 then
-            size = "flexible"
-            difficulty = "normal"
-        elseif difficultyIndex == 15 then
-            size = "flexible"
-            difficulty = "heroic"
-        elseif difficultyIndex == 16 then
-            size = "twenty"
-            difficulty = "mythic"
-        elseif difficultyIndex == 17 then
-            size = "flexible"
-            difficulty = "lfr"
         end
     else
         size = "none"
@@ -2291,8 +2246,8 @@ function WeakAuras.ScanForLoads(self, event, arg1)
     local shouldBeLoaded, couldBeLoaded;
     for id, triggers in pairs(auras) do
         local _, data = next(triggers);
-        shouldBeLoaded = data.load and data.load("ScanForLoads_Auras", incombat, inpetbattle, player, class, spec, playerLevel, zone, size, difficulty, role, inGroup, battleShouting);
-        couldBeLoaded = data.load and data.load("ScanForLoads_Auras", true, true, player, class, spec, playerLevel, zone, size, difficulty, role, inGroup, battleShouting);
+        shouldBeLoaded = data.load and data.load("ScanForLoads_Auras", incombat, player, class, playerLevel, zone, size, difficulty, inGroup, battleShouting);
+        couldBeLoaded = data.load and data.load("ScanForLoads_Auras", true, player, class, playerLevel, zone, size, difficulty, inGroup, battleShouting);
         if (shouldBeLoaded and not loaded[id]) then
             WeakAuras.LoadDisplay(id);
             changed = changed + 1;
@@ -2317,8 +2272,8 @@ function WeakAuras.ScanForLoads(self, event, arg1)
     end
     for id, triggers in pairs(events) do
         local _, data = next(triggers);
-        shouldBeLoaded = data.load and data.load("ScanForLoads_Events", incombat, inpetbattle, player, class, spec, playerLevel, zone, size, difficulty, role, inGroup, battleShouting);
-        couldBeLoaded = data.load and data.load("ScanForLoads_Events", true, true, player, class, spec, playerLevel, zone, size, difficulty, role, inGroup, battleShouting);
+        shouldBeLoaded = data.load and data.load("ScanForLoads_Events", incombat, player, class, playerLevel, zone, size, difficulty, inGroup, battleShouting);
+        couldBeLoaded = data.load and data.load("ScanForLoads_Events", true, player, class, playerLevel, zone, size, difficulty, inGroup, battleShouting);
         if (shouldBeLoaded and not loaded[id]) then
             WeakAuras.LoadDisplay(id);
             changed = changed + 1;
@@ -3236,7 +3191,6 @@ function WeakAuras.Modernize(data)
 
     -- Change English-language class tokens to locale-agnostic versions
     local class_agnosticize = {
-        ["Death Knight"] = "DEATHKNIGHT",
         ["Druid"] = "DRUID",
         ["Hunter"] = "HUNTER",
         ["Mage"] = "MAGE",
