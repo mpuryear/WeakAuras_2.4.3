@@ -345,7 +345,6 @@ local miss_types = WeakAuras.miss_types;
 local environmental_types = WeakAuras.environmental_types;
 local aura_types = WeakAuras.aura_types;
 local orientation_types = WeakAuras.orientation_types;
-local spec_types = WeakAuras.spec_types;
 local totem_types = WeakAuras.totem_types;
 local texture_types = WeakAuras.texture_types;
 local operator_types = WeakAuras.operator_types;

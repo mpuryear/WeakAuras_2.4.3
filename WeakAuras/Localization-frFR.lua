@@ -191,7 +191,6 @@ L["Include Charges"] = "Inclure charges"
 L["Include Death Runes"] = "Inclure Runes de Mort"
 L["In Combat"] = "En Combat"
 L["Inherited"] = "Hérité"
-L["In Pet Battle"] = "En combat de mascottes" -- Needs review
 L["Inside"] = "Dedans"
 L["Instakill"] = "Mort instant."
 L["Instance Type"] = "Type d'instance"

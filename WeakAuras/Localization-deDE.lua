@@ -190,7 +190,6 @@ L["Include Charges"] = "Aufladungen einbeziehen"
 L["Include Death Runes"] = "Todesrunen miteinbeziehen" -- Needs review
 L["In Combat"] = "Im Kampf"
 L["Inherited"] = "Vererbt"
-L["In Pet Battle"] = "Im Haustierkampf"
 L["Inside"] = "Innerhalb"
 L["Instakill"] = "Sofortiger Tod (INSTAKILL)"
 L["Instance Type"] = "Instanztyp"
