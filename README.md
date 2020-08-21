@@ -10,7 +10,7 @@ But I have a connection with the author.
 
 Works:
 
-Aura check (except for checking the remaining aura ...)
+Aura check
 
 Checking cooldowns (there are some incorrectly working spells, for example mangle druids)
 
