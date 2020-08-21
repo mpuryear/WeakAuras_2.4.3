@@ -89,10 +89,12 @@ local function OnSizeChanged(self, width, height)                               
 	self.obj.editBox:SetWidth(width)
 end
 
-local function OnTextChanged(self, userInput)                                    -- EditBox
-	if userInput then
-		self = self.obj
-		self:Fire("OnTextChanged", self.editBox:GetText())
+local function OnTextChanged(frame)																							 -- EditBox
+	local self = frame.obj
+	local value = self:GetText()
+	if tostring(value) ~= tostring(self.lasttext) then
+		self:Fire("OnTextChanged", value)
+		self.lasttext = value
 		self.button:Enable()
 	end
 end
