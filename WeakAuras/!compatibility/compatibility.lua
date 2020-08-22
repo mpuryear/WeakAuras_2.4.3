@@ -143,14 +143,14 @@ function UnitAura(unit, indexOrName, rank, filter)
 	end
 	
   if (debuffType == "HARMFUL" or debuffType == nil) then
-    local name, r, icon, count, duration, expirationTime = UnitDebuff(unit, 1, newfilter);
+    local name, r, icon, count, dispelType, duration, expirationTime = UnitDebuff(unit, 1, newfilter);
     x = 1;
     while (name ~= nil) do
       if (name == indexOrName and (rank == nil or rank:find("HARMFUL") or rank:find("HELPFUL") or rank == r)) then
         return name, r, icon, count, debuffType, duration, GetTime() + (expirationTime or 0)
 			end
       x = x + 1;
-      name, r, icon, count, duration, expirationTime = UnitDebuff(unit, x, newfilter);
+      name, r, icon, count, dispelType, duration, expirationTime = UnitDebuff(unit, x, newfilter);
 		end
 	end
 	
