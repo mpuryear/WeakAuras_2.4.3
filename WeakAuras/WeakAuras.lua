@@ -2624,6 +2624,8 @@ function WeakAuras.ScanAuras(unit)
 								end
 							end
 
+							if not duration then duration = 1 end
+
                             checkPassed = false;
 
                             -- Aura conforms to trigger options?
