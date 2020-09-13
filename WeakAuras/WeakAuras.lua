@@ -2627,7 +2627,7 @@ function WeakAuras.ScanAuras(unit)
                             checkPassed = false;
 
                             -- Aura conforms to trigger options?
-                            if (name and ((not data.count) or data.count(count)) and (data.ownOnly ~= false or not UnitIsUnit("player", unitCaster))) then
+                            if (name and ((not data.count) or data.count(count)) and (data.ownOnly ~= false or unitCaster~="player")) then
 								if fallback then
 									remaining = expirationTime - time;
 								end
