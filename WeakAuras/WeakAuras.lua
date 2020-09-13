@@ -45,10 +45,10 @@ function WeakAuras.UnitAura( unit, auraName, filter )
 	local index = 1
 
 	repeat
-		name, rank, icon, count, duration, remaining, isStealable = UnitBuff( unit, index, filter )
+		name, rank, icon, count, duration, remaining = UnitBuff( unit, index, filter )
 		
 		if name and name == auraName then
-			return name, rank, icon, count, nil, duration, remaining, isStealable
+			return name, rank, icon, count, nil, duration, remaining
 		end
 		
 		index = index + 1
@@ -56,10 +56,10 @@ function WeakAuras.UnitAura( unit, auraName, filter )
 
 	index = 1
 	repeat
-		name, rank, icon, count, debuffType, duration, remaining, isStealable = UnitDebuff( unit, index, filter )
+		name, rank, icon, count, debuffType, duration, remaining = UnitDebuff( unit, index, filter )
 		
 		if name and name == auraName then
-			return name, rank, icon, count, debuffType, duration, remaining, isStealable
+			return name, rank, icon, count, debuffType, duration, remaining, (duration and "player")
 		end
 		
 		index = index + 1
@@ -2607,7 +2607,7 @@ function WeakAuras.ScanAuras(unit)
 							local fallback = false
 
 							if unit ~= "player" then
-								name, rank, icon, count, debuffType, duration, remaining, isStealable = WeakAuras.UnitAura( unit, checkname, filter )
+								name, rank, icon, count, debuffType, duration, remaining, unitCaster = WeakAuras.UnitAura( unit, checkname, filter )
 								if remaining == nil then
 									remaining = 0
 								end
