@@ -68,7 +68,8 @@ WeakAuras.sound_channel_types = {
 };
 WeakAuras.trigger_require_types = {
   any = L["Any Triggers"],
-  all = L["All Triggers"]
+  all = L["All Triggers"],
+  custom = L["Custom"]
 };
 WeakAuras.trigger_types = {
   aura = L["Aura"],

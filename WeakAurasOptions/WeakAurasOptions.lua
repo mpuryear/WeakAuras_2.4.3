@@ -4615,20 +4615,24 @@ function WeakAuras.ReloadTriggerOptions(data)
   };
   
   local trigger_options = {
-    disjunctive = {
+    trigger_require_type = {
       type = "select",
       name = L["Required For Activation"],
       width = "double",
       order = 0,
       hidden = function() return not (data.additional_triggers and #data.additional_triggers > 0) end,
       values = WeakAuras.trigger_require_types,
-      get = function() return data.disjunctive and "any" or "all" end,
-      set = function(info, v) data.disjunctive = (v == "any") end
+      get = function()
+				return data.trigger_require_type
+			end,
+      set = function(info, v)
+				data.trigger_require_type = v
+			end
     },
     addTrigger = {
       type = "execute",
       name = L["Add Trigger"],
-      order = 0.5,
+      order = 0.95,
       func = function()
         if(data.controlledChildren) then
           for index, childId in pairs(data.controlledChildren) do
@@ -4648,6 +4652,51 @@ function WeakAuras.ReloadTriggerOptions(data)
           optionTriggerChoices[id] = #data.additional_triggers;
         end
         WeakAuras.ReloadTriggerOptions(data);
+      end
+    },
+    custom_trigger_require = {
+      type = "input",
+      name = L["Custom Trigger Activation"],
+      order = 0.6,
+      multiline = true,
+      width = "normal",
+      hidden = function() return not (data.trigger_require_type == "custom") end,
+      get = function() return data.custom_trigger_require end,
+      set = function(info, v)
+        data.custom_trigger_require = v;
+      end
+    },
+    custom_trigger_require_expand = {
+      type = "execute",
+      order = 0.75,
+      name = L["Expand Text Editor"],
+      func = function()
+        WeakAuras.TextEditor(data, {"custom_trigger_require"})
+      end,
+      hidden = function() return not (data.trigger_require_type == "custom") end,
+    },
+    custom_trigger_require_error = {
+      type = "description",
+      name = function()
+        if not(data.custom_trigger_require) then
+          return "";
+        end
+        local _, errorString = loadstring("return "..data.custom_trigger_require);
+        return errorString and "|cFFFF0000"..errorString or "";
+      end,
+      width = "double",
+      order = 0.9,
+      hidden = function()
+        if not(data.trigger_require_type == "custom" and data.custom_trigger_require) then
+          return true;
+        else
+          local loadedFunction, errorString = loadstring("return "..data.custom_trigger_require);
+          if(errorString and not loadedFunction) then
+            return false;
+          else
+            return true;
+          end
+        end
       end
     },
     chooseTrigger = {
