@@ -3942,27 +3942,17 @@ function WeakAuras.SetRegion(data, cloneId)
                     region.trigger_count = region.trigger_count or 0;
                     region.triggers = region.triggers or {};
 
-                    function region:TestTriggers(triggers)
+                    function region:TestTriggers(trigger_count, triggers)
 											local activate = false;
-											if(data.trigger_require_type=="all") then
-												activate=true
-												for trigger,active in ipairs(triggers) do
-													if not active then
-														activate = false
-														break;
-													end
-												end
+											if data.trigger_require_type=="all" then
+												activate = trigger_count > #data.additional_triggers
 											elseif data.trigger_require_type=="any" then
-												activate=false
-												for trigger,active in ipairs(triggers) do
-													if not active then
-														activate = true
-														break;
-													end
+												activate = trigger_count > 0
+											elseif data.trigger_require_type=="custom" then
+												local triggerFunc = WeakAuras.LoadFunction("return " .. (data.custom_trigger_require or ""));
+												if triggerFunc then
+													activate = triggerFunc(triggers)
 												end
-											else
-                        local triggerFunc = WeakAuras.LoadFunction("return " .. (data.custom_trigger_require or ""));
-												activate = triggerFunc(triggers)
 											end
 
 											if activate then
@@ -3978,7 +3968,7 @@ function WeakAuras.SetRegion(data, cloneId)
                         if not (region.triggers[triggernum]) then
                             region.triggers[triggernum] = true;
                             region.trigger_count = region.trigger_count + 1;
-                            return region:TestTriggers(region.triggers);
+                            return region:TestTriggers(region.trigger_count, region.triggers);
                         else
                             return nil;
                         end
@@ -3988,7 +3978,7 @@ function WeakAuras.SetRegion(data, cloneId)
                         if (region.triggers[triggernum]) then
                             region.triggers[triggernum] = nil;
                             region.trigger_count = region.trigger_count - 1;
-                            return not region:TestTriggers(region.triggers);
+                            return not region:TestTriggers(region.trigger_count, region.triggers);
                         else
                             return nil;
                         end
