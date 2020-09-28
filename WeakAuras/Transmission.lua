@@ -312,8 +312,8 @@ hooksecurefunc("ChatFrame_OnHyperlinkShow", function(self, link, text, button)
     if(ItemRefTooltip.WeakAuras_Desc_Box) then
         ItemRefTooltip.WeakAuras_Desc_Box:Hide();
     end
-    if(link == "weakauras") then
-        local _, _, characterName, displayName = text:find("|Hweakauras|h|cFF8800FF%[([^%s]+) |r|cFF8800FF%- ([^%]]+)%]|h");
+    if link:find("|Hweakauras|h") then
+        local _, _, characterName, displayName = link:find("|Hweakauras|h|cFF8800FF%[([^%s]+) |r|cFF8800FF%- ([^%]]+)%]|h");
         if(characterName and displayName) then
             characterName = characterName:gsub("|c[Ff][Ff]......", ""):gsub("|r", "");
             displayName = displayName:gsub("|c[Ff][Ff]......", ""):gsub("|r", "");
